@@ -1,14 +1,14 @@
-## MuTalk : A Mutation Testing Framework
+## MuTalk: A Mutation Testing Framework
 
 
 _Authors:_ Iona Thomas -- Univ. Lille, Inria, CNRS, Centrale Lille, UMR 9189 CRIStAL, Lille, France -- iona.thomas@inria.fr and Pol Durieux -- Univ. Lille, Inria, CNRS, Centrale Lille, UMR 9189 CRIStAL, Lille, France -- pol.durieux@inria.fr
 
 Mutation testing is a technique of measuring the quality and completeness of a test suite. While code coverage is used to make sure that tests execute each method or line of code, mutation testing evaluates the ability to detect new errors. It involves introducing errors and running the tests to see if they are detected. MuTalk is a flexible mutation framework that provides good default values for analyzing a test suite. It can be customized to fit specific domains or projects.
-In this chapter we will discuss :
+In this chapter we will discuss:
 - 1. Introduction to Mutation Testing
 - 2. How to use MuTalk / Quick Start
 - 3. Available options in MuTalk
-- 4. Mutation analysis : variants on mutation testing (TO CHECK)
+- 4. Mutation analysis: variants on mutation testing (TO CHECK)
 
 ### Introduction to Mutation Testing
 
@@ -31,10 +31,10 @@ A common observation when performing mutation testing on a project is that certa
 
 #### An Example
 
-Let's look at the following example method from the class `MyVehicle` :
+Let's look at the following example method from the class `MyVehicle`:
 ```smalltalk
 MyVehicle>>hasFourWheels:
-^ self numberOfWheels = 4
+	^ self numberOfWheels = 4
 ```
 
 Let's consider two instances of mutation: changing the number of wheels and changing the comparison sign. For our example, applying them would result in the following mutants:
@@ -43,29 +43,29 @@ Let's consider two instances of mutation: changing the number of wheels and chan
 ```smalltalk
 "Mutant on the number of wheels"
 MyVehicle>>hasFourWheels:
-^ self numberOfWheels = 3
+	^ self numberOfWheels = 3
 ```
 
 - Turning a "=" into a "~=" (not equal)
 ```smalltalk
 "Mutant on comparison sign"
 MyVehicle>>hasFourWheels:
-^ self numberOfWheels ~= 4
+	^ self numberOfWheels ~= 4
 ```
 
 Let's imagine that we have only the following test:
 ```smalltalk
 MyVehicleTest>>testHasFourWheels
- "Create a vehicule object with 4 wheels"
- | aVehicle |
- aVehicle := MyVehicle newWithWheels: 4.
- self assert: aVehicle hasFourWheels
+ 	"Create a vehicule object with 4 wheels"
+	| aVehicle |
+	aVehicle:= MyVehicle newWithWheels: 4.
+	self assert: aVehicle hasFourWheels
 ```
 The mutant on the number of wheels will cause this test to fail. This mutant has been killed.
 The mutant on the comparison sign will pass the test. This mutant has survived.
 
 
-#### The Mutation Score : a Test Suite Quality Metric.
+#### The Mutation Score: a Test Suite Quality Metric.
 
 The ideal case for a test suite is to kill all mutants, since the tests are designed to detect errors in the code. If mutants survive, this means that if a real error is introduced into the project's source code during a development phase, it may not be detected before deployment and cause bugs later on.
 
@@ -82,7 +82,7 @@ MuTalk is Pharo's mutation testing library. It can be found on [GitHub](https://
 
 #### Mutant Operators
 
-In MuTalk, the mutations are represented by **mutant operators**. A mutant operator is essentially a class that describes a kind of mutation, where it can be applied and the transformation it does to the code. There is an operator for each kind of mutation. If we take back our example from before on the class `MyVehicle`: decreasing an integer is done through an operator, and changing "=" to ">=" is done through another operator.
+In MuTalk, the mutations are represented by **mutant operators**. A mutant operator is essentially a class that describes a kind of mutation, where it can be applied and the transformation it does to the code. There is an operator for each kind of mutation. If we take back our example from before on the class `MyVehicle`: decreasing an integer is done through an operator, and changing `=` to `>=` is done through another operator.
 
 
 #### The Four Steps of MuTalk Analysis
@@ -126,39 +126,46 @@ Then, the mutant is uninstalled and the analysis moves on to the next mutant unt
 
 Check the latest release of MuTalk on github.
 As of writing this chapter, the latest release is 2.6.0:
-```Smalltalk
+
+```smalltalk
 Metacello new
-  baseline: 'MuTalk';
-  repository: 'github://pharo-contributions/mutalk:v2.6.0/src';
-  load.
+	baseline: 'MuTalk';
+	repository: 'github://pharo-contributions/mutalk:v2.6.0/src';
+	load.
 ```
+
 Latest version (unstable):
 ```Smalltalk
 Metacello new
-  baseline: 'MuTalk';
-  repository: 'github://pharo-contributions/mutalk/src';
-  load.
+	baseline: 'MuTalk';
+	repository: 'github://pharo-contributions/mutalk/src';
+	load.
 ```
 
 ##### Running an Analysis
 
 To begin with, you need to create a mutation testing analysis with the *MTAnalysis* class:
+
 ```smalltalk
-analysis := MTAnalysis new.
+analysis:= MTAnalysis new.
 ```
 
-In order to work, MuTalk needs the classes or packages to be mutated, as well as the tests that go with them, because as said before, the purpose of mutation testing is to test tests.  
+In order to work, MuTalk needs the classes or packages to be mutated, as well as the tests that go with them, because as said before, the purpose of mutation testing is to test tests.
+
 To provide a list of classes:
 ```smalltalk
 analysis classesToMutate: { MyVehicle }.
 analysis testClasses: { MyVehicleTest }.
 ```
 or to provide a list of packages:
+
 ```smalltalk
 analysis packagesToMutate: { 'MuTalk-Examples' }.
 analysis testPackages: { 'MuTalk-Examples-Tests' }.
 ```
+
 MuTalk also has a number of configurable options, but they have default values. So you can run the analysis as it is and get the results:
+
 ```smalltalk
 analysis run.
 analysis generalResult inspect
@@ -166,16 +173,17 @@ analysis generalResult inspect
 
 ### Exploring the Results
 
-Once an analysis is run, we get a `MTGeneralResult` object which comes with its specific inspector pannels.
+Once an analysis is run, we get a `MTGeneralResult` object which comes with its specific inspector panels.
 In this section, we go over how to understand the results of the analysis.
 
 #### Example of Analysis
 
 Here is an example of a mutation testing analysis using the example classes provided. Let's look at the results.
+
 ```smalltalk
-analysis := MTAnalysis new
-	            classesToMutate: { MyVehicle };
-	            testClasses: { MyVehicleTest }.
+analysis:= MTAnalysis new
+	classesToMutate: { MyVehicle };
+	testClasses: { MyVehicleTest }.
 "parametrization goes here"
 analysis run.
 analysis generalResult inspect
@@ -185,26 +193,27 @@ analysis generalResult inspect
 
 ![Inspector on generalResult, showing the "Killed mutants" tab. The "Surviving mutants" and "Terminated mutants" tabs look the same. Under the tab there is the list of mutants with their full name. Under it, there is a comparison between the original method and the mutant. At the bottom there is the usual inspector playground.](./figures/Inspector.png)
 
-This is the inspector on the result object of the analysis. From top to bottom :
+This is the inspector on the result object of the analysis. From top to bottom:
 
-* The numbers of evaluated, killed, surviving and terminated mutants are displayed at the top of the window.
-* The inspector contains 4 more tabs than the normal inspector that are specific to the mutation analysis:
+- The numbers of evaluated, killed, surviving and terminated mutants are displayed at the top of the window.
+- The inspector contains 4 more tabs than the normal inspector that are specific to the mutation analysis:
     1. The `Surviving Mutants` tab lists all the mutants that survived.
     2. The `Killed Mutants` tab lists all the mutants that were killed.
     3. The `Terminated Mutants` tab lists the mutants for which there was an issue while performing the installation or uninstallation during the evaluation.
     4. The `Excluded Tests` tab lists the tests that were rejected by the test filter (*@testFilters@*) and why they were rejected.
-* For the mutants tabs, the inspector displays a list of mutants with their names. This includes the type of mutation applied, and the mutated class and method (e.g.: `Increase a literal integer in MyVehicle class>>#newSimpleCar`). When clicking on a mutant, the original code of the method is displayed on the left and the mutated code on the right. Differences are highlighted in green and red. On the image below, you can see that a number was decreased by the mutation from 4 to 3.
+- For the mutants tabs, the inspector displays a list of mutants with their names. This includes the type of mutation applied, and the mutated class and method (e.g.: `Increase a literal integer in MyVehicle class>>#newSimpleCar`). When clicking on a mutant, the original code of the method is displayed on the left and the mutated code on the right. Differences are highlighted in green and red. On the image below, you can see that a number was decreased by the mutation from 4 to 3.
 
 By looking at the first tab about surviving mutants, you can see which cases should be targeted by new tests to improve the test suite.
 
 ### Choosing the Mutant Operators
 
 By default, all of the mutant operators defined in MuTalk are used, but it is possible to only use some of them.
-If we take back our example with `MyVehicle`, to run the analysis only with mutations to replace = by ~= and decrease 4 to 3:
+If we take back our example with `MyVehicle`, to run the analysis only with mutations to replace `=` by `~=` and decrease 4 to 3:
+
 ```smalltalk
-analysis := MTAnalysis new
-	            classesToMutate: { MyVehicle };
-	            testClasses: { MyVehicleTest }.
+analysis:= MTAnalysis new
+	classesToMutate: { MyVehicle };
+	testClasses: { MyVehicleTest }.
 analysis operators: { MTReplaceEqualWithNotEqualOperator new. MTLiteralIntegersDecreaseOperator new }.
 analysis run.
 analysis generalResult inspect
@@ -220,10 +229,11 @@ There are many operators in MuTalk. The table below provides a list of what the 
 
 Mutant generation strategies define how to select which methods to mutate from the source classes. Sometimes not mutating all methods can be a good trade off between potential lesser result quality, according to the relevance of the strategy, and lower execution time.
 To run our example analysis with the strategy of your choice:
+
 ```smalltalk
-analysis := MTAnalysis new
-	            classesToMutate: { MyVehicle };
-	            testClasses: { MyVehicleTest }.
+analysis:= MTAnalysis new
+	classesToMutate: { MyVehicle };
+	testClasses: { MyVehicleTest }.
 analysis mutantGenerationStrategy: "put the strategy you chose here".
 analysis run.
 analysis generalResult inspect
@@ -237,14 +247,17 @@ analysis mutantGenerationStrategy: MTAllMutantGenerationStrategy new.
 
 #### Mutate covered methods
 The strategy `MTSelectingFromCoverageMutantGenerationStrategy` is to mutate only the methods that are covered by tests.
+
 ```smalltalk
 analysis mutantGenerationStrategy: MTSelectingFromCoverageMutantGenerationStrategy new.
 ```
 
 #### Mutate specific methods
 The strategy `MTManualMutatedMethodGenerationStrategy` is based on a manual selection of the methods to be mutated, i.e. providing the mutant selection strategy with a collection of methods. The mutations will then be applied only to these methods and not to the methods of the source classes given during analysis creation.  
+
 ```smalltalk
-analysis mutantGenerationStrategy: MTManualMutatedMethodGenerationStrategy new targetMethods: { MyVehicle>>#numberOfWheels: . MyVehicle>>#hasFourWheels }.
+analysis 
+	mutantGenerationStrategy: MTManualMutatedMethodGenerationStrategy new 	targetMethods: { MyVehicle>>#numberOfWheels: . MyVehicle>>#hasFourWheels }.
 ```
 
 ### Budgeted Analysis
@@ -260,17 +273,18 @@ It shows that although the lower the percentage is the higher the variance is, t
 
 In MuTalk, these limitations are done through budgets. They define limits on the execution of the analysis.
 To run our example analysis with any budget:
+
 ```smalltalk
-analysis := MTAnalysis new
-	            classesToMutate: { MyVehicle };
-	            testClasses: { MyVehicleTest }.
+analysis:= MTAnalysis new
+	classesToMutate: { MyVehicle };
+	testClasses: { MyVehicleTest }.
 analysis budget: "put the budget you chose here".
 analysis run.
 analysis generalResult inspect
 ```
 
 #### Time limit
-The default budget `MTTimeBudget` sets a time limit for the analysis. After this time the analysis stops, wether it evaluated all mutants or not.
+The default budget `MTTimeBudget` sets a time limit for the analysis. After this time the analysis stops, whether it evaluated all mutants or not.
 The example analysis can be run for 2 minutes:
 ```smalltalk
 analysis budget: (MTTimeBudget for: 2 minutes).
@@ -299,7 +313,7 @@ Mutant selection strategies define which mutants are used for analysis, and in w
 The default strategy in MuTalk is the operator selection strategy (*@defaultMutantSelectionStrategy@*).
 To run our example analysis with mutant selection strategy:
 ```smalltalk
-analysis := MTAnalysis new
+analysis:= MTAnalysis new
 	            classesToMutate: { MyVehicle };
 	            testClasses: { MyVehicleTest }.
 analysis mutantSelectionStrategy: "the strategy of your choice".
@@ -357,7 +371,7 @@ Test filters allow you to block certain tests for the entire analysis according 
 MuTalk's default test filter is the `MTCompositeTestFilter`(*@defaultFilter@*).
 To apply a test filter on our example analysis:
 ```smalltalk
-analysis := MTAnalysis new
+analysis:= MTAnalysis new
 	            classesToMutate: { MyVehicle };
 	            testClasses: { MyVehicleTest }.
 analysis testFilter: "the test filter of your choice".
@@ -375,7 +389,7 @@ analysis testFilter: MTFreeTestFilter new.
 The `MTBlockTestFilter` only lets through tests that respect the condition of the given block.  
 It is used in this way, for example, to run only tests whose names end with "test" (so, all of them):
 ```smalltalk
-analysis testFilter: MTBlockTestFilter for: [ :testCase | testCase selector endsWith: 'test' ].
+analysis testFilter: MTBlockTestFilter for: [:testCase | testCase selector endsWith: 'test' ].
 ```
 
 #### Filter using pragmas
@@ -423,13 +437,13 @@ analysis testSelectionStrategy: myTestSelectionStrategy.
 ##### `MTSelectingFromCoverageTestSelectionStrategy`  
 The default is to select only tests that cover mutants, to speed up the analysis. In other words when evaluating a mutant, if a test does not use the mutated method, it will not be run for this evaluation.
 ```smalltalk
-myTestSelectionStrategy := MTSelectingFromCoverageTestSelectionStrategy new.
+myTestSelectionStrategy:= MTSelectingFromCoverageTestSelectionStrategy new.
 ```
 
 ##### `MTAllTestsMethodsRunningTestSelectionStrategy`  
 Another more basic strategy is to run all tests all the time, but this is more time-consuming.
 ```smalltalk
-myTestSelectionStrategy := MTAllTestsMethodsRunningTestSelectionStrategy new.
+myTestSelectionStrategy:= MTAllTestsMethodsRunningTestSelectionStrategy new.
 ```
 
 #### Loggers
@@ -442,26 +456,26 @@ analysis logger: myLogger.
 ##### `MTProgressBarLogger`  
 This logger is selected by default for any analysis. It uses a progress bar to display the progress of the analysis in real time.
 ```smalltalk
-myLogger := MTProgressBarLogger new.
+myLogger:= MTProgressBarLogger new.
 ```
 
 ##### `MTNullLogger`  
 This logger logs nothing.
 ```smalltalk
-myLogger := MTNullLogger new.
+myLogger:= MTNullLogger new.
 ```
 
 ##### `MTFileLogger`  
 This logger writes the trace to a file whose name must be provided. The logger creates the file.  
 To use it:
 ```smalltalk
-myLogger := MTFileLogger toFileNamed: 'log.txt'.
+myLogger:= MTFileLogger toFileNamed: 'log.txt'.
 ```
 
 ##### `MTTranscriptLogger`  
 This logger writes the trace in the Pharo's Transcript.
 ```smalltalk
-myLogger := MTTranscriptLogger new.
+myLogger:= MTTranscriptLogger new.
 ```
 
 
@@ -472,25 +486,25 @@ The mutation matrix is a matrix that represents the results of tests for each mu
 There are several ways to use it:
 * with a collection of classes, assuming the associated test classes have the same names with the “Test” suffix:
     ```smalltalk
-    matrix := MTMatrix forClasses: { MyVehicle }
+    matrix:= MTMatrix forClasses: { MyVehicle }
     ```
 * with a collection of classes and a collection of test classes:
     ```smalltalk
-    matrix := MTMatrix forClasses: { MyVehicle } andTests: { MyVehicleTest }
+    matrix:= MTMatrix forClasses: { MyVehicle } andTests: { MyVehicleTest }
     ```
 * with a collection of packages, assuming that the corresponding test packages have the same names with the suffix “-Tests”:
     ```smalltalk
-    matrix := MTMatrix forPackages: { 'MuTalk-Examples' }
+    matrix:= MTMatrix forPackages: { 'MuTalk-Examples' }
     ```
 * with a collection of packages and a collection of test packages:
     ```smalltalk
-    matrix := MTMatrix forPackages: { 'MuTalk-Examples' } andTestPackages: { 'MuTalk-Examples-Tests' }
+    matrix:= MTMatrix forPackages: { 'MuTalk-Examples' } andTestPackages: { 'MuTalk-Examples-Tests' }
     ```
 
 Once created, the matrix must be created with `build` to run the corresponding mutation analysis. Then it can be displayed with `generateMatrix`. Here is the snippet to analyze the `MyVehicle` example class:
 
 ```smalltalk
-matrix := MTMatrix forClasses: { MyVehicle }.
+matrix:= MTMatrix forClasses: { MyVehicle }.
 matrix build.
 matrix generateMatrix.
 ```
@@ -542,11 +556,11 @@ If one mutant is included in another, we can also say here that there is redunda
 Mutant operator analysis is used to find out how many mutants Mutalk's mutant operator set generates on given classes or packages. In other words, you can find out which operators produce at least a certain number of mutants, and which produce at most a certain number of mutants.  
 To use it:
 ```smalltalk
-operatorAnalysis := MTMutantOperatorAnalysis forClasses: { MyVehicle }
+operatorAnalysis:= MTMutantOperatorAnalysis forClasses: { MyVehicle }
 ```
 or:
 ```smalltalk
-operatorAnalysis := MTMutantOperatorAnalysis forPackages: { 'MuTalk-Examples' }
+operatorAnalysis:= MTMutantOperatorAnalysis forPackages: { 'MuTalk-Examples' }
 ```
 and then:
 ```smalltalk
@@ -564,11 +578,11 @@ operatorAnalysis operatorsProducingAtLeast: 10
 The analysis of non-mutated methods allows you to find methods on which MuTalk was unable to apply mutations, i.e. methods whose body does not contain any code corresponding to the application domains of the mutant operators.  
 This analysis also applies to classes or packages:
 ```smalltalk
-analysis := MTNonMutatedMethodsAnalysis forClasses: { MyVehicle }
+analysis:= MTNonMutatedMethodsAnalysis forClasses: { MyVehicle }
 ```
 or:
 ```smalltalk
-analysis := MTNonMutatedMethodsAnalysis forPackages: { 'MuTalk-Examples' }
+analysis:= MTNonMutatedMethodsAnalysis forPackages: { 'MuTalk-Examples' }
 ```
 Finally, to have the methods without mutation:
 ```smalltalk
@@ -579,7 +593,7 @@ analysis methodsWithoutMutation inspect
 
 Mutation testing modifies the classes under analysis. This is fine if we are studying an application with its own specific classes. However, once we want to analyse classes that are part of the core of the Pharo system, it gets more complicated. Imagine introducing a bug into the UI of all windows with a mutation. Or into the definition of `Object` or `Class`. These mutations can crash your Pharo instance.
 
-One solution to run mutation testing on such classes is to create a copy of these classes and their tests. This copy can be mutated without it impacting the stability of  the system. Pharo comes with a tools to help you copy packages and identify dependencies : package duplication with regex to replace class names and the `Dependencies browser`. The package duplication modify the classes in the copy to reference each other instead of referencing the original package. The dependencies browser allows one to check what are the remaining dependencies after the duplication.
+One solution to run mutation testing on such classes is to create a copy of these classes and their tests. This copy can be mutated without it impacting the stability of  the system. Pharo comes with a tools to help you copy packages and identify dependencies: package duplication with regex to replace class names and the `Dependencies browser`. The package duplication modify the classes in the copy to reference each other instead of referencing the original package. The dependencies browser allows one to check what are the remaining dependencies after the duplication.
 
 Let's take the example of `Color`, which is used for all the UI. For this example we will temporarily move the test class of `Color` into the `Colors` package. With them together, we can duplicate both at the same time, allowing the duplication to rewrite references to `Color` into the tests to `MyColor`, the duplicated version.
 
@@ -600,7 +614,7 @@ At this point, we can check that we have no remaining dependencies on the origin
 We can now run a mutation analysis on our duplicated version of `Colors`:
 
 ```Smalltalk
-analysis := MTAnalysis new.
+analysis:= MTAnalysis new.
 analysis classesToMutate: { MyColor }.
 analysis testClasses: { MyColorTest }.
 analysis run.
