@@ -296,12 +296,15 @@ analysis budget: MTFreeBudget new.
 ```
 
 #### Limit the number of analyzed mutants
+
 The budgets `MTFixedNumberOfMutantsBudget` and `MTPercentageOfMutantsBudget` impose a limit on the number of mutants analyzed, respectively either in absolute number of mutants or in percentage of total mutants.  
 The example analysis can be run with only 10 mutants:
+
 ```smalltalk
 analysis budget: (MTFixedNumberOfMutantsBudget for: 10).
 ```
 or only 50% of them:
+
 ```smalltalk
 analysis budget: (MTPercentageOfMutantsBudget for: 50).
 ```
@@ -309,13 +312,15 @@ analysis budget: (MTPercentageOfMutantsBudget for: 50).
 ### Selection of Mutants to be Evaluated for Budgeted Analysis
 
 When running an analysis with a budget (*@budgets@*), it is unlikely that all mutants will be evaluated. In this context it is important to think about which mutants will be selected for the analysis, and not to lose too much information. Even though there is no way to measure the value of a mutant in an analysis in MuTalk, a basic assumption is that it is important to have diversity.  
+
 Mutant selection strategies define which mutants are used for analysis, and in which order.  
 The default strategy in MuTalk is the operator selection strategy (*@defaultMutantSelectionStrategy@*).
 To run our example analysis with mutant selection strategy:
+
 ```smalltalk
 analysis:= MTAnalysis new
-	            classesToMutate: { MyVehicle };
-	            testClasses: { MyVehicleTest }.
+	classesToMutate: { MyVehicle };
+	testClasses: { MyVehicleTest }.
 analysis mutantSelectionStrategy: "the strategy of your choice".
 analysis run.
 analysis generalResult inspect
@@ -323,13 +328,14 @@ analysis generalResult inspect
 
 #### Basic random selection
 The `MTRandomMutantSelectionStrategy` is to randomly and indiscriminately shuffle all mutants.
+
 ```smalltalk
 analysis mutantSelectionStrategy: MTRandomMutantSelectionStrategy new.
 ```
 
 #### Class, method or operator specific mutant selection strategies
 @defaultMutantSelectionStrategy
-The strategies `MTRandomClassMutantSelectionStrategy`, `MTRandomMethodMutantSelectionStrategy` and `MTRandomOperatorMutantSelectionStrategy` randomly shuffle mutants, but in a specific way. When selecting the next mutant to be evaluated, they respectively randomly select a class, method or mutant operator, then select a mutant from that class, method or operator.  
+The strategies `MTRandomClassMutantSelectionStrategy`, `MTRandomMethodMutantSelectionStrategy` and `MTRandomOperatorMutantSelectionStrategy` randomly shuffle mutants, but in a specific way. When selecting the next mutant to be evaluated, they respectively randomly select a class, method or mutant operator, then select a mutant from that class, method, or operator.  
 These strategies are particularly useful when reducing the number of mutants analyzed with budgets (*@budgets@*). They allow classes/methods/operators that produce few mutants to still be represented in the final results when the number of mutants is reduced.  
 
 Here is the illustrated process of these strategies:
@@ -337,8 +343,9 @@ Here is the illustrated process of these strategies:
 
 To better understand the purpose of these strategies, let's take another example. Let's say there are four operators in our analysis: A, B, C and D, and each of them produces some mutants. Operator A produces half of the total mutants, operator D produces very few of them, while operators B and C produce the rest. For the purpose of the example we will assume that each operator still generates a lot of mutants, just that the representation in the total number of generated mutants are different.  
 With a mutant selection that chooses randomly and without bias a mutant for the analysis, the final selection would look like this:
+
 ![Expected mutant distribution among 4 operators with basic random selection. This distribution in fact matches the actual distribution %width=50](./figures/Distrib.png)  
-Here, A is overrepresented in the final results, while D is barely present. However an operator that produce less mutants than another operator is not necessarily less meaningful. In fact there is no correlation between the number of produced mutants and the importance of the operator.
+Here, A is overrepresented in the final results, while D is barely present. However, an operator that produce less mutants than another operator is not necessarily less meaningful. In fact there is no correlation between the number of produced mutants and the importance of the operator.
 
 Then using a random operator mutant selection, the final selection would look more like this:
 ![Expected mutant distribution among 4 operators with random operator selection (if there are enough mutants for each operator to select the same amount for each of them) %width=50](./figures/Distrib%202.png)
