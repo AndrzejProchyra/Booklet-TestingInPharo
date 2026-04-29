@@ -132,7 +132,7 @@ without fear to break your code and not getting notified about it.
 
 %<!inputFile|path=Chapters/Mocking/StateSpecs.md!>
 
-<!inputFile|path=Chapters/Mutalk/Mutalk.md!>
+<!inputFile|path=Chapters/MuTalk/MuTalk.md!>
 
 <!inputFile|path=Chapters/Benchs/Smark.md!>
 
