@@ -221,9 +221,9 @@ analysis generalResult inspect
 
 There are many operators in MuTalk. The table below provides a list of what the currently available operators do. If these operators are not sufficient and/or if you require domains specific mutations, check this section **.
 
-![](./figures/Operators%20tab1.pdf)
+![](./figures/OperatorTab1.pdf)
 
-![](./figures/Operators%20tab2.pdf)
+![](./figures/OperatorTab2.pdf)
 
 ### Selection of Methods to Be Mutated
 
@@ -267,7 +267,9 @@ Sometimes it is necessary to impose limitations on the mutation analysis to be a
 
 It is interesting to note that it is not necessary to evaluate all mutants to get a general idea of the mutation score of some classes.
 For example, Figure 1-3 shows a graph of the mutation score as a function of the percentage of mutants evaluated.
-![Boxplots showing the mutation score distribution for each percentage of mutants evaluated over the total number of mutants available. Mutation analysis were repeated 10 times for each percentage of mutants](./figures/Score%20percent%20graph.png)
+
+Boxplots showing the mutation score distribution for each percentage of mutants evaluated over the total number of mutants available. Mutation analysis were repeated 10 times for each percentage of mutants](./figures/ScorePercentGraph.png)
+
 For each percent, an analysis was run 10 times with a simple random mutant selection strategy, and the mutation score of each analysis was calculated. Then a boxplot was drawn with these 10 scores. 
 It shows that although the lower the percentage is the higher the variance is, the median is still relatively close to the mutation score when all mutants are evaluated, i.e. at 100%.
 
@@ -345,10 +347,12 @@ To better understand the purpose of these strategies, let's take another example
 With a mutant selection that chooses randomly and without bias a mutant for the analysis, the final selection would look like this:
 
 ![Expected mutant distribution among 4 operators with basic random selection. This distribution in fact matches the actual distribution %width=50](./figures/Distrib.png)  
-Here, A is overrepresented in the final results, while D is barely present. However, an operator that produce less mutants than another operator is not necessarily less meaningful. In fact there is no correlation between the number of produced mutants and the importance of the operator.
+Here, A is overrepresented in the final results, while D is barely present. However, an operator that produces fewer mutants than another operator is not necessarily less meaningful. In fact there is no correlation between the number of produced mutants and the importance of the operator.
 
-Then using a random operator mutant selection, the final selection would look more like this:
-![Expected mutant distribution among 4 operators with random operator selection (if there are enough mutants for each operator to select the same amount for each of them) %width=50](./figures/Distrib%202.png)
+Then, using a random operator mutant selection, the final selection would look more like this:
+
+![Expected mutant distribution among 4 operators with random operator selection (if there are enough mutants for each operator to select the same amount for each of them) %width=50](./figures/Distrib2.png)
+
 In this example, the strategy ensures that operator D is as present in the results as the other operators, as far as there are enough mutants from operator D. This is not guaranteed with basic random selection. 
 
 For the mutant selection strategy on classes:
@@ -578,7 +582,7 @@ and:
 operatorAnalysis operatorsProducingAtLeast: 10
 ```
 
-![Results of a mutant operator analysis run on MyVehicle. Here are the operators that produced at least 3 mutants %width=75](./figures/Operator%20Analysis.png)
+![Results of a mutant operator analysis run on MyVehicle. Here are the operators that produced at least 3 mutants %width=75](./figures/OperatorAnalysis.png)
 
 ### Non-Mutated Methods
 
@@ -614,7 +618,7 @@ Once the classes are duplicated, the `MyColor` class needs to be initialized. On
 
 ![Initalising the MyColor Class](./figures/ColorClassInitialisation.png)
 
-At this point, we can check that we have no remaining dependencies on the original `Colors` package by right-clicking on the package name and selecting `Browse dependencies`. We can check in the picture below that in the left most column we do not see the `Colors` package. 
+At this point, we can check that we have no remaining dependencies on the original `Colors` package by right-clicking on the package name and selecting `Browse dependencies`. We can check in the picture below that in the left-most column we do not see the `Colors` package. 
 
 ![Dependencies browser for MyColors package](./figures/MyColorsDependenciesBrowser.png)
 
