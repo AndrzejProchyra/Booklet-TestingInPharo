@@ -365,7 +365,7 @@ This is the case of the following example: two div siblings have the same attrib
 ```
 #### Chaining findElement to find a child element
 In these cases, XPATH can be used, however, there is a simpler way, using nested selectors which is nothing else than locating elements in the result of a previous location.
-For example, the following locates the div entry with id `'div2'` :
+For example, the following locates the div entry with id `'div2'`:
 
 ```
 inputOfDiv2 := (driver findElementByID: 'div2') findElementByName: 'same'
